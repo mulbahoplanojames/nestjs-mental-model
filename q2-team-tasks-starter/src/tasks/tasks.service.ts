@@ -1,12 +1,36 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Task, TaskStatus } from './task.entity';
-import { CreateTaskDto, UpdateTaskDto } from './tasks.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { Task, TaskStatus } from "./task.entity";
+import { CreateTaskDto, UpdateTaskDto } from "./tasks.dto";
 
 const SEED_TASKS: Task[] = [
-  { id: 1, title: 'Set up CI pipeline', description: '', status: TaskStatus.Done, ownerId: 2 },
-  { id: 2, title: 'Write API docs', description: 'OpenAPI + examples', status: TaskStatus.InProgress, ownerId: 2 },
-  { id: 3, title: 'Design onboarding flow', description: '', status: TaskStatus.Todo, ownerId: 3 },
-  { id: 4, title: 'Fix login bug', description: 'Safari only', status: TaskStatus.Todo, ownerId: 3 },
+  {
+    id: 1,
+    title: "Set up CI pipeline",
+    description: "",
+    status: TaskStatus.Done,
+    ownerId: 2,
+  },
+  {
+    id: 2,
+    title: "Write API docs",
+    description: "OpenAPI + examples",
+    status: TaskStatus.InProgress,
+    ownerId: 2,
+  },
+  {
+    id: 3,
+    title: "Design onboarding flow",
+    description: "",
+    status: TaskStatus.Todo,
+    ownerId: 3,
+  },
+  {
+    id: 4,
+    title: "Fix login bug",
+    description: "Safari only",
+    status: TaskStatus.Todo,
+    ownerId: 3,
+  },
 ];
 
 @Injectable()
@@ -24,13 +48,13 @@ export class TasksService {
     return task;
   }
 
-  create(dto: CreateTaskDto): Task {
+  create(dto: CreateTaskDto, ownerId: number): Task {
     const task: Task = {
       id: this.nextId++,
       title: dto.title,
-      description: dto.description ?? '',
+      description: dto.description ?? "",
       status: dto.status ?? TaskStatus.Todo,
-      ownerId: dto.ownerId,
+      ownerId,
     };
     this.tasks.push(task);
     return task;
