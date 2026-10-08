@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   NotImplementedException,
@@ -51,9 +52,23 @@ export class BooksService {
     return book;
   }
 
-  // TODO (Task 2): create the book (apply defaults, reject duplicate ISBNs with 409).
   create(dto: CreateBookDto): Book {
-    throw new NotImplementedException();
+    if (this.books.some((book) => book.isbn === dto.isbn)) {
+      throw new ConflictException(
+        `A book with ISBN ${dto.isbn} already exists`,
+      );
+    }
+    const book: Book = {
+      id: this.nextId++,
+      title: dto.title,
+      author: dto.author,
+      isbn: dto.isbn,
+      publishedYear: dto.publishedYear,
+      genres: dto.genres ?? [],
+      available: dto.available ?? true,
+    };
+    this.books.push(book);
+    return book;
   }
 
   // TODO (Task 5): partially update a book.
