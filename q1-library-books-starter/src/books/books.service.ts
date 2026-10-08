@@ -71,13 +71,26 @@ export class BooksService {
     return book;
   }
 
-  // TODO (Task 5): partially update a book.
   update(id: number, dto: UpdateBookDto): Book {
-    throw new NotImplementedException();
+    const book = this.findOne(id);
+    if (
+      dto.isbn &&
+      dto.isbn !== book.isbn &&
+      this.books.some((item) => item.isbn === dto.isbn)
+    ) {
+      throw new ConflictException(
+        `A book with ISBN ${dto.isbn} already exists`,
+      );
+    }
+    Object.assign(book, dto);
+    return book;
   }
 
-  // TODO (Task 6): delete a book.
   remove(id: number): void {
-    throw new NotImplementedException();
+    const index = this.books.findIndex((book) => book.id === id);
+    if (index === -1) {
+      throw new NotFoundException(`Book with id ${id} not found`);
+    }
+    this.books.splice(index, 1);
   }
 }
