@@ -1,21 +1,23 @@
-import { Controller, Get, NotImplementedException } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { Controller, Get } from "@nestjs/common";
+import { CurrentUser, Roles } from "../auth/auth.decorators";
+import { Role, PublicUser, User } from "./user.entity";
+import { UsersService } from "./users.service";
 
 // TODO (Task 3): the whole controller is admin-only...
-@Controller('users')
+@Controller("users")
+@Roles(Role.Admin)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // TODO (Task 4): ...except this route, which every authenticated user may call.
-  // It returns the caller's own profile (use your @CurrentUser() decorator).
-  @Get('me')
-  me() {
-    throw new NotImplementedException();
+  @Get("me")
+  @Roles()
+  me(@CurrentUser() user: User): PublicUser {
+    const { token, ...profile } = user;
+    return profile;
   }
 
-  // BUG (Task 5): this currently leaks every user's secret token.
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(): PublicUser[] {
+    return this.usersService.findAll().map(({ token, ...profile }) => profile);
   }
 }
