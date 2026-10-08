@@ -1,6 +1,12 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
-import { TaskStatus } from './task.entity';
+import { PartialType } from "@nestjs/mapped-types";
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from "class-validator";
+import { TaskStatus } from "./task.entity";
 
 export class CreateTaskDto {
   @IsString()
@@ -15,10 +21,6 @@ export class CreateTaskDto {
   @IsOptional()
   @IsEnum(TaskStatus)
   status?: TaskStatus;
-
-  // BUG (Task 4): clients should not be able to choose the owner of a task.
-  @IsInt()
-  ownerId: number;
 }
 
 export class UpdateTaskDto extends PartialType(CreateTaskDto) {}

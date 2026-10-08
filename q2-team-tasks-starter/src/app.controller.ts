@@ -1,23 +1,25 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from "@nestjs/common";
+import { Public } from "./auth/auth.decorators";
 
-// TODO (Task 2): both routes in this controller must stay reachable WITHOUT a token.
 @Controller()
 export class AppController {
   @Get()
+  @Public()
   info() {
     return {
-      name: 'Team Tasks API',
+      name: "Team Tasks API",
       hint: 'Send "Authorization: Bearer <token>". Run "npm test" in a new terminal to check your solution.',
       testTokens: {
-        admin: 'token-amina',
-        member: ['token-brian', 'token-chloe'],
-        viewer: 'token-diego',
+        admin: "token-amina",
+        member: ["token-brian", "token-chloe"],
+        viewer: "token-diego",
       },
     };
   }
 
-  @Get('health')
+  @Get("health")
+  @Public()
   health() {
-    return { status: 'ok' };
+    return { status: "ok" };
   }
 }
