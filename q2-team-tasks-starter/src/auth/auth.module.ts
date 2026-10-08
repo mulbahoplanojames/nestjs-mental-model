@@ -1,10 +1,15 @@
-import { Module } from '@nestjs/common';
-import { UsersModule } from '../users/users.module';
+import { Module } from "@nestjs/common";
+import { APP_GUARD } from "@nestjs/core";
+import { UsersModule } from "../users/users.module";
+import { AuthGuard, RolesGuard } from "./auth.guard";
 
 // TODO (Task 1 & 3): register your guards here so they apply to EVERY route
 // of the application (hint: APP_GUARD from @nestjs/core).
 @Module({
   imports: [UsersModule],
-  providers: [],
+  providers: [
+    { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+  ],
 })
 export class AuthModule {}
